@@ -1,0 +1,4 @@
+einops
+natsort
+peft
+pandas
