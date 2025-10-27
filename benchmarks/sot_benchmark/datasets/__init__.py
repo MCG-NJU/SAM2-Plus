@@ -1,4 +1,4 @@
-from matplotlib import dates
+from .customdataset import CustomDataset
 from .got10kdataset import GOT10KDataset
 from .trackingnetdataset import TrackingNetDataset
 from .trackinganygranularitydataset import TrackingAnyGranularityDataset
@@ -17,7 +17,9 @@ def construct_dataset(dataset_name, dataset_root):
     Raises:
         ValueError: If the dataset name is unknown.
     """
-    if dataset_name == "tracking_any_granularity_val":
+    if dataset_name == "customdataset":
+        return CustomDataset(dataset_root)
+    elif dataset_name == "tracking_any_granularity_val":
         return TrackingAnyGranularityDataset(dataset_root, 'valid')
     elif dataset_name == "tracking_any_granularity_test":
         return TrackingAnyGranularityDataset(dataset_root, 'test')
