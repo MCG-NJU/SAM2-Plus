@@ -75,10 +75,10 @@ huggingface-cli download MCG-NJU/Tracking-Any-Granularity --repo-type dataset --
 
 ## 🔥 Latest News
 
-- **[2024-10-29]** Release [simple script](#-inference-sam-2) for each task.
+- **[2025-10-29]** Release [simple script](#-inference-sam-2) for each task.
 - https://github.com/z-jiaming/sam2_plus/tree/open_source_1022#-inference-sam-2
-- **[2024-10-29]** Release model checkpoint on [Hugging Face](https://huggingface.co/MCG-NJU/SAM2-Plus).
-- **[2024-10-24]** [SAM 2++ model](https://github.com/MCG-NJU/SAM2-Plus) and part of [Tracking-Any-Granularity dataset](https://huggingface.co/datasets/MCG-NJU/tracking-any-granularity) are released. Check out the [project page](https://tracking-any-granularity.github.io/) for more details.
+- **[2025-10-29]** Release model checkpoint on [Hugging Face](https://huggingface.co/MCG-NJU/SAM2-Plus).
+- **[2025-10-24]** [SAM 2++ model](https://github.com/MCG-NJU/SAM2-Plus) and part of [Tracking-Any-Granularity dataset](https://huggingface.co/datasets/MCG-NJU/tracking-any-granularity) are released. Check out the [project page](https://tracking-any-granularity.github.io/) for more details.
 
 ## 📑 Todo List
 
