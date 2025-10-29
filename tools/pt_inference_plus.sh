@@ -11,6 +11,24 @@ radius=5
 sigma=2
 
 
+## Example
+python ./tools/pt_inference_plus.py \
+--sam2_cfg ${model_config} \
+--sam2_checkpoint ${checkpoint_path} \
+--dataset_name custom \
+--dataset_dir ./examples \
+--output_pt_dir ${path_to_output}/custom \
+--skip_exist_result \
+--radius $radius --sigma $sigma
+
+python ./benchmarks/pt_benchmark/evaluation_method.py \
+--dataset_name custom \
+--metrics_type tapvid \
+--dataset_dir ./examples \
+--groundtruth_npz_dir ./examples/Points \
+--pred_npz_dir ${path_to_output}/custom/result_point
+
+
 ## Tracking-Any-Granularity val
 python ./tools/pt_inference_plus.py \
 --sam2_cfg ${model_config} \

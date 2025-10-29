@@ -9,6 +9,21 @@ checkpoint_name=$(basename "$checkpoint_path")
 path_to_output="./outputs/SAM2-Plus/${checkpoint_name%.pt}/SOT/"
 
 
+## Example
+python ./tools/sot_inference_plus.py \
+--sam2_cfg ${model_config} \
+--sam2_checkpoint ${checkpoint_path} \
+--dataset_name customdataset \
+--dataset_dir ./examples \
+--output_box_dir ${path_to_output}/customdataset \
+--skip_exist_result
+
+python ./benchmarks/sot_benchmark/evaluation.py \
+--dataset_name customdataset \
+--dataset_dir ./examples \
+--output_box_dir ${path_to_output}/customdataset
+
+
 ## Tracking-Any-Granularity val
 python ./tools/sot_inference_plus.py \
 --sam2_cfg ${model_config} \

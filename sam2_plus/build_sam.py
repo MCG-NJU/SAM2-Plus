@@ -31,7 +31,14 @@ if os.path.isdir(os.path.join(sam2.__path__[0], "sam2")):
         "rather than its parent dir, or from your home directory) after installing SAM 2."
     )
 
-from sam2.build_sam import _load_checkpoint
+
+HF_MODEL_ID_TO_FILENAMES = {
+    "MCG-NJU/SAM2-Plus": (
+        "configs/sam2.1/sam2.1_hiera_b+_predmasks_decoupled_MAME.yaml",
+        "checkpoint_phase123.pt",
+    ),
+}
+
 
 def build_sam2_plus(
     config_file,
@@ -76,11 +83,11 @@ def build_sam2_video_predictor_plus(
     **kwargs,
 ):
     hydra_overrides = [
-        "++model._target_=sam2_plus.sam2_video_predictor_plus.SAM2VideoPredictor_Plus",    # "++model._target_=sam2.sam2_video_predictor.SAM2VideoPredictor",
+        "++model._target_=sam2_plus.sam2_video_predictor.SAM2VideoPredictor_Plus",
     ]
     if vos_optimized:
         hydra_overrides = [
-            "++model._target_=sam2_plus.sam2_video_predictor_plus.SAM2VideoPredictorVOS_Plus",  # "++model._target_=sam2.sam2_video_predictor.SAM2VideoPredictorVOS",
+            "++model._target_=sam2_plus.sam2_video_predictor.SAM2VideoPredictorVOS_Plus",
             "++model.compile_image_encoder=True",  # Let sam2_base handle this
         ]
 
@@ -108,3 +115,36 @@ def build_sam2_video_predictor_plus(
     if mode == "eval":
         model.eval()
     return model
+
+
+def _hf_download(model_id):
+    from huggingface_hub import hf_hub_download
+
+    config_name, checkpoint_name = HF_MODEL_ID_TO_FILENAMES[model_id]
+    ckpt_path = hf_hub_download(repo_id=model_id, filename=checkpoint_name)
+    return config_name, ckpt_path
+
+
+def build_sam_plus_hf(model_id, **kwargs):
+    config_name, ckpt_path = _hf_download(model_id)
+    return build_sam2_plus(config_file=config_name, ckpt_path=ckpt_path, **kwargs)
+
+
+def build_sam2_video_predictor_plus_hf(model_id, **kwargs):
+    config_name, ckpt_path = _hf_download(model_id)
+    return build_sam2_video_predictor_plus(
+        config_file=config_name, ckpt_path=ckpt_path, **kwargs
+    )
+
+
+def _load_checkpoint(model, ckpt_path):
+    if ckpt_path is not None:
+        sd = torch.load(ckpt_path, map_location="cpu", weights_only=True)["model"]
+        missing_keys, unexpected_keys = model.load_state_dict(sd)
+        if missing_keys:
+            logging.error(missing_keys)
+            raise RuntimeError()
+        if unexpected_keys:
+            logging.error(unexpected_keys)
+            raise RuntimeError()
+        logging.info("Loaded checkpoint sucessfully")

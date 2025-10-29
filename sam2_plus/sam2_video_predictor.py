@@ -111,9 +111,9 @@ class SAM2VideoPredictor_Plus(SAM2Plus):
         Returns:
           (SAM2VideoPredictor_Plus): The loaded model.
         """
-        from sam2.build_sam import build_sam2_video_predictor_hf
+        from sam2_plus.build_sam import build_sam2_video_predictor_plus_hf
 
-        sam_model = build_sam2_video_predictor_hf(model_id, **kwargs)
+        sam_model = build_sam2_video_predictor_plus_hf(model_id, **kwargs)
         return sam_model
 
     def _obj_id_to_idx(self, inference_state, obj_id):

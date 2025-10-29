@@ -9,6 +9,21 @@ checkpoint_name=$(basename "$checkpoint_path")
 path_to_output="./outputs/SAM2-Plus/${checkpoint_name%.pt}/VOS/"
 
 
+## Example
+python ./tools/vos_inference_plus.py \
+--sam2_cfg ${model_config} \
+--sam2_checkpoint ${checkpoint_path} \
+--base_video_dir ./examples/JPEGImages/ \
+--input_mask_dir ./examples/Annotations/ \
+--output_mask_dir ${path_to_output}/examples/Annotations
+
+python sav_dataset/sav_evaluator.py \
+  --gt_root ./examples/Annotations/ \
+  --pred_root ${path_to_output}/examples/Annotations/ \
+  --strict \
+  --num_processes `nproc`
+
+
 ## Tracking-Any-Granularity val
 python ./tools/vos_inference_plus.py \
 --sam2_cfg ${model_config} \
