@@ -122,6 +122,11 @@ def _hf_download(model_id):
 
     config_name, checkpoint_name = HF_MODEL_ID_TO_FILENAMES[model_id]
     ckpt_path = hf_hub_download(repo_id=model_id, filename=checkpoint_name)
+
+    from transformers import PretrainedConfig
+    cfg = PretrainedConfig.from_pretrained(model_id)
+    print(cfg)
+
     return config_name, ckpt_path
 
 
