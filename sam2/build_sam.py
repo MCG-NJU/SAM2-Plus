@@ -13,7 +13,6 @@ from hydra.utils import instantiate
 from omegaconf import OmegaConf
 
 import sam2
-print("build")
 
 # Check if the user is running Python from the parent directory of the sam2 repo
 # (i.e. the directory where this repo is cloned into) -- this is not supported since
@@ -108,7 +107,6 @@ def build_sam2_video_predictor(
     vos_optimized=False,
     **kwargs,
 ):
-    print("here")
     hydra_overrides = [
         "++model._target_=sam2.sam2_video_predictor.SAM2VideoPredictor",
     ]
@@ -157,7 +155,6 @@ def build_sam2_hf(model_id, **kwargs):
 
 
 def build_sam2_video_predictor_hf(model_id, **kwargs):
-    print("hi")
     config_name, ckpt_path = _hf_download(model_id)
     return build_sam2_video_predictor(
         config_file=config_name, ckpt_path=ckpt_path, **kwargs
