@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://scholar.google.com/citations?hl=en&user=0lLB3fsAAAAJ">Jiaming Zhang</a>, Cheng Liang, Yichun Yang, Chenkai Zeng, 
+  <a href="https://scholar.google.com/citations?user=0lLB3fsAAAAJ">Jiaming Zhang</a>, Cheng Liang, Yichun Yang, Chenkai Zeng, 
 </p>
 
 <p align="center">
-  <a href="[https://scholar.google.com/citations?hl=en&user=0lLB3fsAAAAJ](https://scholar.google.com/citations?user=TSMchWcAAAAJ&hl=en&oi=ao)">Yutao Cui</a>, Xinwen Zhang, Xin Zhou, Kai Ma, Gangshan Wu, <a href="http://wanglimin.github.io/">Limin Wang</a>
+  <a href="https://scholar.google.com/citations?user=TSMchWcAAAAJ">Yutao Cui</a>, Xinwen Zhang, Xin Zhou, Kai Ma, Gangshan Wu, <a href="http://wanglimin.github.io/">Limin Wang</a>
 </p>
 
 <p align="center">
