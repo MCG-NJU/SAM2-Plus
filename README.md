@@ -5,12 +5,20 @@
   <a href="https://arxiv.org/abs/2510.18822"><img src="https://img.shields.io/badge/📜%20arXiv-2510.18822-b31b1b.svg" alt="arXiv"></a>
   <a href="https://huggingface.co/MCG-NJU/SAM2-Plus"><img src="https://img.shields.io/badge/🤗%20Model-SAM2--Plus-4dc0b0" alt="Model"></a>
   <a href="https://huggingface.co/datasets/MCG-NJU/Tracking-Any-Granularity"><img src="https://img.shields.io/badge/🤗%20Dataset-Tracking--Any--Granularity-ffca28" alt="Dataset"></a>
-  <a href="https://www.codabench.org/competitions/11796/"><img src="https://img.shields.io/badge/🏆%20Leaderboard-Ranking-8b5cf6" alt="Leaderboard"></a>
+  <a href="https://www.codabench.org/competitions/11796/"><img src="https://img.shields.io/badge/🏆%20Leaderboard-Tracking--Any--Granularity-8b5cf6" alt="Leaderboard"></a>
 </p>
 
-[Jiaming Zhang](https://scholar.google.com/citations?hl=en&user=0lLB3fsAAAAJ), Cheng Liang, Yichun Yang, Chenkai Zeng,<br> [Yutao Cui](https://scholar.google.com/citations?user=TSMchWcAAAAJ&hl=en&oi=ao), Xinwen Zhang, Xin Zhou, Kai Ma, Gangshan Wu, [Limin Wang](http://wanglimin.github.io/)
+<p align="center">
+  <a href="https://scholar.google.com/citations?hl=en&user=0lLB3fsAAAAJ">Jiaming Zhang</a>, Cheng Liang, Yichun Yang, Chenkai Zeng, 
+</p>
 
-**[Multimedia Computing Group, Nanjing University](http://mcg.nju.edu.cn/)**
+<p align="center">
+  <a href="[https://scholar.google.com/citations?hl=en&user=0lLB3fsAAAAJ](https://scholar.google.com/citations?user=TSMchWcAAAAJ&hl=en&oi=ao)">Yutao Cui</a>, Xinwen Zhang, Xin Zhou, Kai Ma, Gangshan Wu, <a href="http://wanglimin.github.io/">Limin Wang</a>
+</p>
+
+<p align="center">
+  <a href="http://mcg.nju.edu.cn">Multimedia Computing Group, Nanjing University</a>
+</p>
 
 ## 🌟 Overview
 
