@@ -5,7 +5,7 @@
   <a href="https://arxiv.org/abs/2510.18822"><img src="https://img.shields.io/badge/📜%20arXiv-2510.18822-b31b1b.svg" alt="arXiv"></a>
   <a href="https://huggingface.co/MCG-NJU/SAM2-Plus"><img src="https://img.shields.io/badge/🤗%20Model-SAM2--Plus-4dc0b0" alt="Model"></a>
   <a href="https://huggingface.co/datasets/MCG-NJU/Tracking-Any-Granularity"><img src="https://img.shields.io/badge/🤗%20Dataset-Tracking--Any--Granularity-ffca28" alt="Dataset"></a>
-  <a href="TODO"><img src="https://img.shields.io/badge/🏆%20Leaderboard-Ranking-8b5cf6" alt="Leaderboard"></a>
+  <a href="https://www.codabench.org/competitions/11796/"><img src="https://img.shields.io/badge/🏆%20Leaderboard-Ranking-8b5cf6" alt="Leaderboard"></a>
 </p>
 
 [Jiaming Zhang](https://scholar.google.com/citations?hl=en&user=0lLB3fsAAAAJ), Cheng Liang, Yichun Yang, Chenkai Zeng,<br> [Yutao Cui](https://scholar.google.com/citations?user=TSMchWcAAAAJ&hl=en&oi=ao), Xinwen Zhang, Xin Zhou, Kai Ma, Gangshan Wu, [Limin Wang](http://wanglimin.github.io/)
@@ -75,14 +75,13 @@ huggingface-cli download MCG-NJU/Tracking-Any-Granularity --repo-type dataset --
 
 ## 🔥 Latest News
 
+- **[2025-11-25]** Challenge Leaderboard for Tracking-Any-Granularity dataset is now online on [CodaBench](https://www.codabench.org/competitions/11796/).
 - **[2025-10-29]** Release [simple script](#-inference-sam-2) for each task.
 - **[2025-10-29]** Release model checkpoint on [Hugging Face](https://huggingface.co/MCG-NJU/SAM2-Plus).
 - **[2025-10-24]** [SAM 2++ model](https://github.com/MCG-NJU/SAM2-Plus) and part of [Tracking-Any-Granularity dataset](https://huggingface.co/datasets/MCG-NJU/tracking-any-granularity) are released. Check out the [project page](https://tracking-any-granularity.github.io/) for more details.
 
 ## 📑 Todo List
 
-- [ ] Challenge Leaderboard for Tracking-Any-Granularity dataset
-- [ ] Usage with 🤗 Transformers
 - [x] Upload model to 🤗 Hugging Face Model Hub
 - [ ] Notebook Demo
 
