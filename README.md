@@ -28,6 +28,18 @@ Existing trackers are often task-specific, limiting generalization.
 We present a unified tracker, **SAM 2++**, unifies tracking across masks, boxes, and points through task-specific prompts, a unified decoder, and a task-adaptive memory mechanism.
 Trained with the large-scale **Tracking-Any-Granularity** dataset, which extend with data engine, SAM 2++ achieves state-of-the-art performance across diverse benchmarks, offering a robust unified tracking framework.
 
+## 🔥 Latest News
+
+- **[2025-11-25]** Challenge Leaderboard for Tracking-Any-Granularity dataset is now online on [CodaBench](https://www.codabench.org/competitions/11796/). This challenge aims to benchmark the performance of unified trackers across different granularities on test set of our Tracking-Any-Granularity dataset. We welcome researchers to participate and contribute to advancing the field of unified tracking. Meanwhile, we also provide to evaluate task-independent trackers on the leaderboard.
+- **[2025-10-29]** Release [simple script](#-inference-sam-2) for each task.
+- **[2025-10-29]** Release model checkpoint on [Hugging Face](https://huggingface.co/MCG-NJU/SAM2-Plus).
+- **[2025-10-24]** [SAM 2++ model](https://github.com/MCG-NJU/SAM2-Plus) and part of [Tracking-Any-Granularity dataset](https://huggingface.co/datasets/MCG-NJU/tracking-any-granularity) are released. Check out the [project page](https://tracking-any-granularity.github.io/) for more details.
+
+## 📑 Todo List
+
+- [x] Upload model to 🤗 Hugging Face Model Hub
+- [ ] Notebook Demo
+
 ## 🏗️ SAM 2++ Model
 
 ![SAM2++ model](assets/2-model.png?raw=true)
@@ -35,6 +47,55 @@ Trained with the large-scale **Tracking-Any-Granularity** dataset, which extend 
 - We present a unified video tracking framework, termed as **SAM 2 ++**, which extends the SAM 2 model to track any targets in videos at any granularity, including masks, bounding boxes, and points.
 - Due to the various task granularities, we introduce **task-specific prompts** to unify task input in different granularities and the **Unified Decoder** to unify diverse task results into a unified form pre-output.
 - During mixture training, we found that a fully parameter-shared model training results in performance degradation due to the diverse memory requirements across tasks. To address this, we introduce a **task-adaptive memory mechanism** that dynamically adjusts memory representations according to each task's demand, enhancing the multi-task processing capability.
+
+## 💥 Results
+
+You can find some visualization results of SAM 2++ on different tracking tasks below (better view results in [project page](https://tracking-any-granularity.github.io/)):
+
+  <table  align="center">
+    <tbody>
+      <tr>
+        <th class="media1">Tracking-Any-Granularity</th>
+        <th class="media1">MOSE</th>
+        <th class="media1">VISOR</th>
+      </tr>
+      <tr>
+        <td><img  width="220" src="assets/demo/mask-TA_val-00211.gif"/></td>
+        <td><img  width="220" src="assets/demo/mask-MOSE-ba5644c3--6.gif"/></td>
+        <td><img  width="220" src="assets/demo/mask-VISOR_val-P24_09_seq_00055--3.gif"/></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table  align="center">
+    <tbody>
+      <tr>
+        <th class="media1">Tracking-Any-Granularity</th>
+        <th class="media1">GOT-10k</th>
+        <th class="media1">NFS</th>
+      </tr>
+      <tr>
+        <td><img  width="220" src="assets/demo/box-TA_val-00721.gif"/></td>
+        <td><img  width="220" src="assets/demo/box-Got10K-GOT-10k_Test_000143--15.gif"/></td>
+        <td><img  width="220" src="assets/demo/box-NFS-nfs_soccer_player_2.gif"/></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table  align="center">
+    <tbody>
+      <tr>
+        <th class="media1">Tracking-Any-Granularity</th>
+        <th class="media1">TAPVid DAVIS</th>
+        <th class="media1">RoboTAP</th>
+      </tr>
+      <tr>
+        <td><img  width="220" src="assets/demo/points-TrackingAnything_val-00300--3--3--20--15.gif"/></td>
+        <td><img  width="220" src="assets/demo/points-Tapvid_davis-00002--4--3--20--15.gif"/></td>
+        <td><img  width="220" src="assets/demo/points-Tapvid_robotap-00055--2--2--20--15-resize.gif"/></td>
+      </tr>
+    </tbody>
+  </table>
 
 ## 🗃️ Tracking-Any-Granularity Dataset
 
@@ -80,18 +141,6 @@ Trained with the large-scale **Tracking-Any-Granularity** dataset, which extend 
 pip install huggingface_hub[cli]
 huggingface-cli download MCG-NJU/Tracking-Any-Granularity --repo-type dataset --local-dir ../Tracking-Any-Granularity --local-dir-use-symlinks False --max-workers 16
 ```
-
-## 🔥 Latest News
-
-- **[2025-11-25]** Challenge Leaderboard for Tracking-Any-Granularity dataset is now online on [CodaBench](https://www.codabench.org/competitions/11796/).
-- **[2025-10-29]** Release [simple script](#-inference-sam-2) for each task.
-- **[2025-10-29]** Release model checkpoint on [Hugging Face](https://huggingface.co/MCG-NJU/SAM2-Plus).
-- **[2025-10-24]** [SAM 2++ model](https://github.com/MCG-NJU/SAM2-Plus) and part of [Tracking-Any-Granularity dataset](https://huggingface.co/datasets/MCG-NJU/tracking-any-granularity) are released. Check out the [project page](https://tracking-any-granularity.github.io/) for more details.
-
-## 📑 Todo List
-
-- [x] Upload model to 🤗 Hugging Face Model Hub
-- [ ] Notebook Demo
 
 ## 🛠️ Installation
 
@@ -494,55 +543,6 @@ training/train_ddp.py \
     -c <train-config-path> \
     --torchrun_with_ddp
 ```
-
-## 💥 Results
-
-You can find some visualization results of SAM 2++ on different tracking tasks below (better view results in [project page](https://tracking-any-granularity.github.io/)):
-
-  <table  align="center">
-    <tbody>
-      <tr>
-        <th class="media1">Tracking-Any-Granularity</th>
-        <th class="media1">MOSE</th>
-        <th class="media1">VISOR</th>
-      </tr>
-      <tr>
-        <td><img  width="220" src="assets/demo/mask-TA_val-00211.gif"/></td>
-        <td><img  width="220" src="assets/demo/mask-MOSE-ba5644c3--6.gif"/></td>
-        <td><img  width="220" src="assets/demo/mask-VISOR_val-P24_09_seq_00055--3.gif"/></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table  align="center">
-    <tbody>
-      <tr>
-        <th class="media1">Tracking-Any-Granularity</th>
-        <th class="media1">GOT-10k</th>
-        <th class="media1">NFS</th>
-      </tr>
-      <tr>
-        <td><img  width="220" src="assets/demo/box-TA_val-00721.gif"/></td>
-        <td><img  width="220" src="assets/demo/box-Got10K-GOT-10k_Test_000143--15.gif"/></td>
-        <td><img  width="220" src="assets/demo/box-NFS-nfs_soccer_player_2.gif"/></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table  align="center">
-    <tbody>
-      <tr>
-        <th class="media1">Tracking-Any-Granularity</th>
-        <th class="media1">TAPVid DAVIS</th>
-        <th class="media1">RoboTAP</th>
-      </tr>
-      <tr>
-        <td><img  width="220" src="assets/demo/points-TrackingAnything_val-00300--3--3--20--15.gif"/></td>
-        <td><img  width="220" src="assets/demo/points-Tapvid_davis-00002--4--3--20--15.gif"/></td>
-        <td><img  width="220" src="assets/demo/points-Tapvid_robotap-00055--2--2--20--15-resize.gif"/></td>
-      </tr>
-    </tbody>
-  </table>
 
 ## 📄 License
 
