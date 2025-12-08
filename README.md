@@ -3,6 +3,7 @@
 <p align="center">
   <a href="https://tracking-any-granularity.github.io/"><img src="https://img.shields.io/badge/🏠%20web-Homepage-blue.svg" alt="Homepage"></a>
   <a href="https://arxiv.org/abs/2510.18822"><img src="https://img.shields.io/badge/📜%20arXiv-2510.18822-b31b1b.svg" alt="arXiv"></a>
+  <a href="https://zhuanlan.zhihu.com/p/1977807775796054001"><img alt="Static Badge" src="https://img.shields.io/badge/Zhihu-%F0%9F%93%96-blue?style=flat-square"></a>
   <a href="https://huggingface.co/MCG-NJU/SAM2-Plus"><img src="https://img.shields.io/badge/🤗%20Model-SAM2--Plus-4dc0b0" alt="Model"></a>
   <a href="https://huggingface.co/datasets/MCG-NJU/Tracking-Any-Granularity"><img src="https://img.shields.io/badge/🤗%20Dataset-Tracking--Any--Granularity-ffca28" alt="Dataset"></a>
   <a href="https://www.codabench.org/competitions/11796/"><img src="https://img.shields.io/badge/🏆%20Leaderboard-Tracking--Any--Granularity-8b5cf6" alt="Leaderboard"></a>
