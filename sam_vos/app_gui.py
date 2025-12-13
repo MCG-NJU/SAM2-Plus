@@ -7,8 +7,18 @@ from app_core import VOSCore
 from engine import overlay_mask
 import numpy as np
 
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message=r"cannot import name '_C' from 'sam2'",
+    category=UserWarning,
+)
+
 core=VOSCore()
-SAVE_DIR="vos_results/"
+
+SAVE_DIR="vos_results/overlay/"
+MASK_DIR = "vos_results/masks/"
 
 MODEL_CFG  = r"F:\GitHub\SAM2-Plus\sam2\configs\sam2.1\sam2.1_hiera_t.yaml"
 MODEL_CKPT = r"F:\GitHub\SAM2-Plus\checkpoints\sam2.1_hiera_tiny.pt"
@@ -51,7 +61,7 @@ def click_fg(e):
     px=int(e.x*W/DISPLAY_W)
     py=int(e.y*H/DISPLAY_H)
     core.pm.add_point(px,py,1)
-    print("[CLICK+FG]",px,py)
+    #print("[CLICK+FG]",px,py)
 
 def click_bg(e):
     img=core.current_frame()
@@ -59,7 +69,7 @@ def click_bg(e):
     px=int(e.x*W/DISPLAY_W)
     py=int(e.y*H/DISPLAY_H)
     core.pm.add_point(px,py,0)
-    print("[CLICK-BG]",px,py)
+    #print("[CLICK-BG]",px,py)
 
 
 def load_model():
@@ -72,12 +82,12 @@ def load_frames():
         update_frame()
 
 def segment():
-    print("[UI] Segment clicked")
+    #print("[UI] Segment clicked")
     core.segment()
 
 def nxt(): core.next_frame()
 def prv(): core.prev_frame()
-def clr(): core.pm.clear();core.mask=None;print("[UI] points cleared")
+def clr(): core.pm.clear();core.mask=None;#print("[UI] points cleared")
 
 def save_one():
     img=core.current_frame().copy()
@@ -85,16 +95,17 @@ def save_one():
     os.makedirs(SAVE_DIR,exist_ok=True)
     fp=f"{SAVE_DIR}/frame_{core.frame_idx}.png"
     cv2.imwrite(fp,img)
-    print("[SAVE]",fp)
+    #print("[SAVE]",fp)
+
 
 def run_all():
-    print("[RUN FULL]")
-    if not core.pm.points: return print("❌ No points — abort")
+    #print("[RUN FULL]")
+    if not core.pm.points: return #print("❌ No points — abort")
 
     os.makedirs(SAVE_DIR,exist_ok=True)
 
     for i in range(core.frame_idx,len(core.frames)):
-        print(f"[FULL] frame {i}")
+        #print(f"[FULL] frame {i}")
         core.segment()
         img=overlay_mask(core.current_frame(),core.mask)
         cv2.imwrite(f"{SAVE_DIR}/frame_{i}.png",img)
