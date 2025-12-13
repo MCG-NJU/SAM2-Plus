@@ -1,135 +1,166 @@
+import os
+import cv2
+import torch
+import argparse
 import tkinter as tk
-from tkinter import filedialog, messagebox
-import cv2, os
 from PIL import Image, ImageTk
 
-from app_core import VOSCore
+from sam2.build_sam import build_sam2_video_predictor
+from point_manager import PointManager
+from app_core import AppCore
 from engine import overlay_mask
-import numpy as np
-
 import warnings
 
 warnings.filterwarnings(
     "ignore",
-    message=r"cannot import name '_C' from 'sam2'",
-    category=UserWarning,
+    message="cannot import name '_C' from 'sam2'"
 )
 
-core=VOSCore()
+# ---------------- ARGUMENTS ----------------
+parser = argparse.ArgumentParser()
+parser.add_argument("--image_dir", required=True, type=str)
+args = parser.parse_args()
 
-SAVE_DIR="vos_results/overlay/"
-MASK_DIR = "vos_results/masks/"
+os.environ["TQDM_DISABLE"] = "1"
 
-MODEL_CFG  = r"F:\GitHub\SAM2-Plus\sam2\configs\sam2.1\sam2.1_hiera_t.yaml"
-MODEL_CKPT = r"F:\GitHub\SAM2-Plus\checkpoints\sam2.1_hiera_tiny.pt"
+IMAGE_DIR = args.image_dir
 
-DISPLAY_W=900
-DISPLAY_H=500
+MODEL_CFG = r"F:/GitHub/SAM2-Plus/sam2/configs/sam2.1/sam2.1_hiera_t.yaml"
+MODEL_CKPT = r"F:/GitHub/SAM2-Plus/checkpoints/sam2.1_hiera_tiny.pt"
+
+DISPLAY_W, DISPLAY_H = 900, 500
 
 
-def update_frame():
-    if not core.frames:
-        canvas.after(30, update_frame)
+# ---------------- LOAD FRAMES ----------------
+frames = sorted(
+    [os.path.join(IMAGE_DIR, f) for f in os.listdir(IMAGE_DIR)
+     if f.lower().endswith((".jpg", ".png"))]
+)
+assert len(frames) > 0, "No images found"
+
+
+# ---------------- LOAD MODEL ----------------
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+predictor = build_sam2_video_predictor(
+    MODEL_CFG,
+    MODEL_CKPT,
+    device=device,
+)
+
+print("[OK] SAM-2 model and dependencies loaded successfully.")
+
+state = predictor.init_state(IMAGE_DIR)
+
+
+# ---------------- CORE ----------------
+pm = PointManager()
+core = AppCore(predictor, frames, state, pm)
+
+preview_mask = None   # for Visualization button
+
+
+# ---------------- GUI ----------------
+root = tk.Tk()
+root.title("SAM-2 Prompt (Once)")
+
+canvas = tk.Canvas(root, width=DISPLAY_W, height=DISPLAY_H, bg="black")
+canvas.pack()
+
+tk_img = None
+
+
+def draw(img):
+    global tk_img
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.resize(img, (DISPLAY_W, DISPLAY_H))
+    tk_img = ImageTk.PhotoImage(Image.fromarray(img))
+    canvas.create_image(0, 0, anchor=tk.NW, image=tk_img)
+
+
+def draw_points(img):
+    for (x, y), lbl in zip(pm.points, pm.labels):
+        color = (0, 255, 0) if lbl == 1 else (0, 0, 255)
+        cv2.circle(img, (x, y), 6, color, -1)
+
+
+def update():
+    img = cv2.imread(frames[0])
+
+    if preview_mask is not None:
+        img = overlay_mask(img, preview_mask)
+
+    draw_points(img)
+    draw(img)
+
+
+# ---------------- MOUSE ----------------
+def on_click(event):
+    img = cv2.imread(frames[0])
+    h, w = img.shape[:2]
+
+    x = int(event.x * w / DISPLAY_W)
+    y = int(event.y * h / DISPLAY_H)
+
+    if event.num == 1:
+        pm.add_point(x, y, 1)   # FG
+    elif event.num == 3:
+        pm.add_point(x, y, 0)   # BG
+
+    update()
+
+
+canvas.bind("<Button-1>", on_click)
+canvas.bind("<Button-3>", on_click)
+
+
+# ---------------- BUTTON ACTIONS ----------------
+def clear_points():
+    global preview_mask
+    pm.clear()
+    preview_mask = None
+    update()
+
+
+def visualize_prompt():
+    """
+    Visualize SAM-2 response on frame 0 ONLY.
+    Does NOT commit object memory.
+    """
+    global preview_mask
+
+    if len(pm.points) == 0:
         return
 
-    img = core.current_frame().copy()
+    res = predictor.add_new_points_or_box(
+        inference_state=state,
+        frame_idx=0,
+        points=pm.points,
+        labels=pm.labels,
+        obj_id=0,
+    )
 
-    # overlay mask
-    if isinstance(core.mask, np.ndarray):
-        img = overlay_mask(img, core.mask)
+    logits = res[2][0].squeeze().cpu()
+    preview_mask = (torch.sigmoid(logits) > 0.5).numpy().astype("uint8")
 
-
-    disp = cv2.resize(img,(DISPLAY_W,DISPLAY_H))
-    disp = cv2.cvtColor(disp,cv2.COLOR_BGR2RGB)
-
-    for (px,py),lbl in zip(core.pm.points,core.pm.labels):
-        sx = int(px * DISPLAY_W / img.shape[1])
-        #sy = int(py * DISPLAY_HEIGHT / img.shape[0])
-        sy = int(py * DISPLAY_H / img.shape[0])
-        cv2.circle(disp,(sx,sy),7,(0,255,0) if lbl==1 else (255,0,0),-1)
-
-    imgtk = ImageTk.PhotoImage(Image.fromarray(disp))
-    canvas.img = imgtk
-    canvas.create_image(0,0,anchor=tk.NW,image=imgtk)
-
-    canvas.after(30, update_frame)
+    update()
 
 
-def click_fg(e):
-    img=core.current_frame()
-    H,W=img.shape[:2]
-    px=int(e.x*W/DISPLAY_W)
-    py=int(e.y*H/DISPLAY_H)
-    core.pm.add_point(px,py,1)
-    #print("[CLICK+FG]",px,py)
-
-def click_bg(e):
-    img=core.current_frame()
-    H,W=img.shape[:2]
-    px=int(e.x*W/DISPLAY_W)
-    py=int(e.y*H/DISPLAY_H)
-    core.pm.add_point(px,py,0)
-    #print("[CLICK-BG]",px,py)
+def segment_and_run():
+    core.initialize_object()
+    root.destroy()
+    core.run_full_propagation()
 
 
-def load_model():
-    core.load_model(MODEL_CFG,MODEL_CKPT)
+# ---------------- BUTTONS ----------------
+btn_frame = tk.Frame(root)
+btn_frame.pack(pady=10)
 
-def load_frames():
-    p=filedialog.askdirectory()
-    if p:
-        core.load_video(p)
-        update_frame()
-
-def segment():
-    #print("[UI] Segment clicked")
-    core.segment()
-
-def nxt(): core.next_frame()
-def prv(): core.prev_frame()
-def clr(): core.pm.clear();core.mask=None;#print("[UI] points cleared")
-
-def save_one():
-    img=core.current_frame().copy()
-    if core.mask is not None: img=overlay_mask(img,core.mask)
-    os.makedirs(SAVE_DIR,exist_ok=True)
-    fp=f"{SAVE_DIR}/frame_{core.frame_idx}.png"
-    cv2.imwrite(fp,img)
-    #print("[SAVE]",fp)
+tk.Button(btn_frame, text="Clear", width=12, command=clear_points).grid(row=0, column=0, padx=5)
+tk.Button(btn_frame, text="Visualization", width=12, command=visualize_prompt).grid(row=0, column=1, padx=5)
+tk.Button(btn_frame, text="Segment & Run", width=14, command=segment_and_run).grid(row=0, column=2, padx=5)
 
 
-def run_all():
-    #print("[RUN FULL]")
-    if not core.pm.points: return #print("❌ No points — abort")
-
-    os.makedirs(SAVE_DIR,exist_ok=True)
-
-    for i in range(core.frame_idx,len(core.frames)):
-        #print(f"[FULL] frame {i}")
-        core.segment()
-        img=overlay_mask(core.current_frame(),core.mask)
-        cv2.imwrite(f"{SAVE_DIR}/frame_{i}.png",img)
-        core.next_frame()
-
-
-root=tk.Tk()
-root.title("SAM2 VOS — FULL LOG MODE")
-
-canvas=tk.Canvas(root,width=DISPLAY_W,height=DISPLAY_H,bg="black")
-canvas.pack()
-canvas.bind("<Button-1>",click_fg)
-canvas.bind("<Button-3>",click_bg)
-
-for t,c in [
-    ("Load Model",load_model),
-    ("Select Frames Folder",load_frames),
-    ("Segment Frame",segment),
-    ("← Prev",prv),
-    ("Next →",nxt),
-    ("Clear Points",clr),
-    ("Save Current Frame",save_one),
-    ("Run Full Sequence",run_all)
-]:
-    tk.Button(root,text=t,command=c).pack(fill="x")
-
+# ---------------- START ----------------
+update()
 root.mainloop()

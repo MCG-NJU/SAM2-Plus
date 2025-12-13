@@ -1,61 +1,63 @@
-from model import load_sam2, initialize_inference
-from engine import run_segmentation
+import os
 import cv2
+import torch
+from engine import initialize_object, overlay_mask
 
 
-class VOSCore:
-    def __init__(self):
-        self.predictor=None
-        self.state=None
-        self.frames=[]
-        self.frame_idx=0
-        self.pm=None
+class AppCore:
+    def __init__(self, predictor, frames, state, point_manager):
+        self.predictor = predictor
+        self.frames = frames
+        self.state = state
+        self.pm = point_manager
+        self.obj_id = 0
 
-        from interaction import PointManager
-        self.pm = PointManager()
-        self.mask=None
+    def initialize_object(self):
+        """
+        Initialize SAM-2 object memory using user prompts on frame 0.
+        """
+        print("[INFO] Initializing object with user prompt...")
 
-    def load_model(self,cfg,ckpt):
-        print("[LOG] Loading model...")
-        self.predictor,_ = load_sam2(cfg,ckpt)
-        print("[OK] Model loaded.")
-
-    def load_video(self,video_dir):
-        from io_utils import load_frames
-        print("[LOG] Loading frames from:",video_dir)
-        self.frames = load_frames(video_dir)
-        print("[OK] Frames loaded:",len(self.frames))
-
-        print("[LOG] Initializing VOS state...")
-        self.state = initialize_inference(self.predictor,video_dir)
-        self.frame_idx=0
-        self.mask=None
-        print("[OK] State ready at frame 0")
-
-    def current_frame(self):
-        return cv2.imread(self.frames[self.frame_idx])
-
-    def segment(self):
-        if not self.pm.points: return
-
-        from engine import run_segmentation
-        self.mask = run_segmentation(
-            predictor=self.predictor,
-            state=self.state,
-            frame=self.frame_idx,
+        initialize_object(
+            self.predictor,
+            self.state,
+            frame_idx=0,
             points=self.pm.points,
-            labels=self.pm.labels
+            labels=self.pm.labels,
+            obj_id=self.obj_id,
         )
 
-    def next_frame(self):
-        if self.frame_idx < len(self.frames)-1:
-            self.frame_idx+=1
-            self.mask=None
-        print("[MOVE] → frame",self.frame_idx)
+        print("[OK] Object initialized.")
 
-    def prev_frame(self):
-        if self.frame_idx > 0:
-            self.frame_idx-=1
-            self.mask=None
-        print("[MOVE] ← frame",self.frame_idx)
+    def run_full_propagation(self):
+        """
+        Run SAM-2 propagation on all remaining frames and save results.
+        Output directory: ../vos_results relative to image directory.
+        """
+        print("[INFO] Running SAM-2 propagation...")
 
+        # ------------------------------------------------
+        # Output directory: data/vos_results
+        # ------------------------------------------------
+        images_dir = os.path.dirname(self.frames[0])      # .../data/images
+        output_dir = os.path.abspath(
+            os.path.join(images_dir, "..", "vos_results")
+        )
+        os.makedirs(output_dir, exist_ok=True)
+
+        # ------------------------------------------------
+        # SAM-2 propagation (generator – must be called ONCE)
+        # ------------------------------------------------
+        for frame_idx, obj_ids, logits in self.predictor.propagate_in_video(self.state):
+
+            # logits shape: (num_objects, 1, H, W)
+            logits = logits[0].squeeze().cpu()
+            mask = (torch.sigmoid(logits) > 0.5).numpy().astype("uint8")
+
+            img = cv2.imread(self.frames[frame_idx])
+            vis = overlay_mask(img, mask)
+
+            out_path = os.path.join(output_dir, f"frame_{frame_idx}.png")
+            cv2.imwrite(out_path, vis)
+
+        print(f"[OK] Propagation completed. Results saved to:\n{output_dir}")
