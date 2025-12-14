@@ -1,35 +1,25 @@
-```md
 # SAM-2 Interactive Video Object Segmentation
 
 This project provides a lightweight GUI to interactively prompt an object on the first frame using points and automatically propagate the segmentation across all frames using **SAM-2**.
 
----
-
 ## Folder Structure
-```
 
 sam_vos/
-├── app_gui.py
-├── app_core.py
-├── engine.py
-├── point_manager.py
-└── data/
-├── images/ # Input frames (ordered images)
-└── vos_results/ # Output segmentation overlays
 
-````
-
----
+- app_core.py
+- app_gui.py
+- engine.py
+- point_manager.py
+- data/
+  - images # Input frames
+  - vos_results # Output segmentation overlays
 
 ## How to Run
 
-Activate your Python environment and run:
-
-```bash
-python app_gui.py --image_dir data/images
-````
-
----
+1. Activate your Python environment
+2. `cd sam_vos`
+3. `pip install -r requirements.txt`
+4. `python app_gui.py --image_dir data/images`
 
 ## GUI Interaction
 
@@ -52,8 +42,6 @@ python app_gui.py --image_dir data/images
   Finalizes the object, closes the GUI, and automatically propagates the
   segmentation to all frames.
 
----
-
 ## Output
 
 Segmented results are saved to:
@@ -61,10 +49,6 @@ Segmented results are saved to:
 ```
 data/vos_results/
 ```
-
-One output image is generated per frame (`frame_0.png`, `frame_1.png`, …).
-
----
 
 ## Notes
 
