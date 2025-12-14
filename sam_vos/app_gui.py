@@ -102,15 +102,22 @@ def on_click(event):
     x = int(event.x * w / DISPLAY_W)
     y = int(event.y * h / DISPLAY_H)
 
-    if event.num == 1:
-        pm.add_point(x, y, 1)   # FG
-    elif event.num == 3:
-        pm.add_point(x, y, 0)   # BG
+    # if event.num == 1:
+    #     pm.add_point(x, y, 1)   # FG
+    # elif event.num == 3:
+    #     pm.add_point(x, y, 0)   # BG
+
+    if event.num == 1 and not (event.state & 0x0004):  # Left click
+        pm.add_point(x, y, 1)   # Foreground
+    else:
+        pm.add_point(x, y, 0)   # Background (Right click OR Ctrl+Left)
+
 
     update()
 
 
 canvas.bind("<Button-1>", on_click)
+canvas.bind("<Control-Button-1>", on_click)
 canvas.bind("<Button-3>", on_click)
 
 
