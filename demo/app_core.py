@@ -48,7 +48,7 @@ class AppCore:
         # ------------------------------------------------
         # SAM-2 propagation (generator – must be called ONCE)
         # ------------------------------------------------
-        for frame_idx, obj_ids, logits in self.predictor.propagate_in_video(self.state):
+        for frame_idx, obj_ids, logits, _, _ in self.predictor.propagate_in_video(self.state):
 
             # logits shape: (num_objects, 1, H, W)
             logits = logits[0].squeeze().cpu()

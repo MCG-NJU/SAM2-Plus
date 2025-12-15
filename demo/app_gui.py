@@ -5,7 +5,7 @@ import argparse
 import tkinter as tk
 from PIL import Image, ImageTk
 
-from sam2.build_sam import build_sam2_video_predictor
+from sam2_plus.build_sam import build_sam2_video_predictor_plus
 from point_manager import PointManager
 from app_core import AppCore
 from engine import overlay_mask
@@ -25,8 +25,8 @@ os.environ["TQDM_DISABLE"] = "1"
 
 IMAGE_DIR = args.image_dir
 
-MODEL_CFG = r"F:/GitHub/SAM2-Plus/sam2/configs/sam2.1/sam2.1_hiera_t.yaml"
-MODEL_CKPT = r"F:/GitHub/SAM2-Plus/checkpoints/sam2.1_hiera_tiny.pt"
+MODEL_CFG = "configs/sam2.1/sam2.1_hiera_b+_predmasks_decoupled_MAME.yaml"
+MODEL_CKPT = f"{os.path.dirname(__file__)}/../checkpoints/SAM2-Plus/checkpoint_phase123.pt"
 
 DISPLAY_W, DISPLAY_H = 900, 500
 
@@ -42,7 +42,7 @@ assert len(frames) > 0, "No images found"
 # ---------------- LOAD MODEL ----------------
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-predictor = build_sam2_video_predictor(
+predictor = build_sam2_video_predictor_plus(
     MODEL_CFG,
     MODEL_CKPT,
     device=device,
