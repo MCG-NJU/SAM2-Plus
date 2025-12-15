@@ -31,6 +31,7 @@ Trained with the large-scale **Tracking-Any-Granularity** dataset, which extend 
 
 ## 🔥 Latest News
 
+- **[2025-12-15]** Provide a simple [demo](demo/) for interactive video object segmentation using SAM-2 Plus. Thanks to [@MDSALMANSHAMS](https://github.com/MDSALMANSHAMS) for the great contribution!
 - **[2025-11-25]** Challenge Leaderboard for Tracking-Any-Granularity dataset is now online on [CodaBench](https://www.codabench.org/competitions/11796/). This challenge aims to benchmark the performance of unified trackers across different granularities on test set of our Tracking-Any-Granularity dataset. We welcome researchers to participate and contribute to advancing the field of unified tracking. Meanwhile, we also provide to evaluate task-independent trackers on the leaderboard.
 - **[2025-10-29]** Release [simple script](#-inference-sam-2) for each task.
 - **[2025-10-29]** Release model checkpoint on [Hugging Face](https://huggingface.co/MCG-NJU/SAM2-Plus).
@@ -140,7 +141,7 @@ You can find some visualization results of SAM 2++ on different tracking tasks b
 
 ```bash
 pip install huggingface_hub[cli]
-huggingface-cli download MCG-NJU/Tracking-Any-Granularity --repo-type dataset --local-dir ../Tracking-Any-Granularity --local-dir-use-symlinks False --max-workers 16
+huggingface-cli download MCG-NJU/Tracking-Any-Granularity --repo-type dataset --local-dir ../Tracking-Any-Granularity
 ```
 
 ## 🛠️ Installation
@@ -188,7 +189,7 @@ First, we need to download checkpoint from [huggingface](https://huggingface.co/
 
 ```bash
 pip install huggingface_hub[cli]
-huggingface-cli download MCG-NJU/SAM2-Plus --local-dir ./checkpoints/SAM2-Plus --local-dir-use-symlinks False --max-workers 16
+huggingface-cli download MCG-NJU/SAM2-Plus --local-dir ./checkpoints/SAM2-Plus
 ```
 
 ## 🪄 Inference SAM 2++
